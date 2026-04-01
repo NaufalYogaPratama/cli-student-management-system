@@ -20,7 +20,7 @@ public class MainMenu {
 
         while (running) {
             showMenu();
-            String choice = readNonEmptyInput("Choose menu (1-3): ");
+            String choice = readNonEmptyInput("Choose menu (1-6): ");
 
             switch (choice) {
                 case "1":
@@ -30,11 +30,20 @@ public class MainMenu {
                     viewStudentsMenu();
                     break;
                 case "3":
+                    searchStudentByIdMenu();
+                    break;
+                case "4":
+                    updateStudentMenu();
+                    break;
+                case "5":
+                    deleteStudentMenu();
+                    break;
+                case "6":
                     running = false;
                     System.out.println("Exiting application. Goodbye!");
                     break;
                 default:
-                    System.out.println("Invalid choice. Please select 1, 2, or 3.");
+                    System.out.println("Invalid choice. Please select a menu between 1 and 6.");
             }
 
             System.out.println();
@@ -44,8 +53,11 @@ public class MainMenu {
     private void showMenu() {
         System.out.println("==== Student Management Menu ====");
         System.out.println("1. Add Student");
-        System.out.println("2. View Students");
-        System.out.println("3. Exit");
+        System.out.println("2. View All Students");
+        System.out.println("3. Search Student by ID");
+        System.out.println("4. Update Student");
+        System.out.println("5. Delete Student");
+        System.out.println("6. Exit");
     }
 
     private void addStudentMenu() {
@@ -61,7 +73,7 @@ public class MainMenu {
         if (added) {
             System.out.println("Student added successfully.");
         } else {
-            System.out.println("Failed to add student. Check ID (must be unique and not empty).");
+            System.out.println("Failed to add student. ID must be unique and not empty.");
         }
     }
 
@@ -77,6 +89,60 @@ public class MainMenu {
         for (int i = 0; i < students.size(); i++) {
             Student student = students.get(i);
             System.out.println((i + 1) + ". " + student);
+        }
+    }
+
+    private void searchStudentByIdMenu() {
+        System.out.println("\n-- Search Student by ID --");
+        String id = readNonEmptyInput("Input student ID: ");
+
+        Student student = studentService.findStudentById(id);
+        if (student == null) {
+            System.out.println("Student with ID '" + id + "' not found.");
+        } else {
+            System.out.println("Student found: " + student);
+        }
+    }
+
+    private void updateStudentMenu() {
+        System.out.println("\n-- Update Student --");
+        String id = readNonEmptyInput("Input student ID to update: ");
+
+        Student existingStudent = studentService.findStudentById(id);
+        if (existingStudent == null) {
+            System.out.println("Student with ID '" + id + "' not found.");
+            return;
+        }
+
+        System.out.println("Current data: " + existingStudent);
+        String newName = readNonEmptyInput("Input new name: ");
+        int newAge = readPositiveAge("Input new age: ");
+
+        Student newData = new Student(existingStudent.getId(), newName, newAge);
+        boolean updated = studentService.updateStudent(id, newData);
+
+        if (updated) {
+            System.out.println("Student updated successfully.");
+        } else {
+            System.out.println("Failed to update student.");
+        }
+    }
+
+    private void deleteStudentMenu() {
+        System.out.println("\n-- Delete Student --");
+        String id = readNonEmptyInput("Input student ID to delete: ");
+
+        Student student = studentService.findStudentById(id);
+        if (student == null) {
+            System.out.println("Student with ID '" + id + "' not found.");
+            return;
+        }
+
+        boolean deleted = studentService.deleteStudent(id);
+        if (deleted) {
+            System.out.println("Student deleted successfully.");
+        } else {
+            System.out.println("Failed to delete student.");
         }
     }
 

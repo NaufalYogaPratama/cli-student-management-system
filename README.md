@@ -1,35 +1,37 @@
 # CLI Student Management System
 
-Simple Java CLI project structure for a Student Management System.
+Simple Java CLI Student Management System for interview practice.
+
+## Features
+
+- Add student
+- View all students
+- Search student by ID
+- Update student data
+- Delete student
+- Exit menu
 
 ## Project Structure
 
 ```text
-src/main/java/
-  model/    -> domain classes (e.g., Student)
-  service/  -> business logic (e.g., StudentService)
-  ui/       -> console menu/input-output
-  app/      -> application entry point (Main)
+src/
+  model/    -> domain class (`Student`)
+  service/  -> business logic (`StudentService`)
+  ui/       -> console menu/input-output (`MainMenu`)
+  Main.java -> application entry point
 ```
-
-## Current Status
-
-- Folder structure initialized
-- `Main.java` entry point created
-- Business logic is not implemented yet
 
 ## How to Run
 
 From project root:
 
 ```bash
-javac -d out src/main/java/app/Main.java
-java -cp out app.Main
+mkdir -p out
+javac -d out $(find src -name "*.java")
+java -cp out Main
 ```
 
-If you want to compile all Java files later:
+## Notes
 
-```bash
-javac -d out $(find src/main/java -name "*.java")
-java -cp out app.Main
-```
+- Uses only Java standard library
+- Data is stored in memory (no file/database persistence yet)
