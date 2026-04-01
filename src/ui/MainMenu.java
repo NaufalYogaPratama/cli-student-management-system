@@ -20,8 +20,7 @@ public class MainMenu {
 
         while (running) {
             showMenu();
-            System.out.print("Choose menu (1-3): ");
-            String choice = scanner.nextLine().trim();
+            String choice = readNonEmptyInput("Choose menu (1-3): ");
 
             switch (choice) {
                 case "1":
@@ -52,22 +51,9 @@ public class MainMenu {
     private void addStudentMenu() {
         System.out.println("\n-- Add Student --");
 
-        System.out.print("Input ID: ");
-        String id = scanner.nextLine().trim();
-
-        System.out.print("Input Name: ");
-        String name = scanner.nextLine().trim();
-
-        System.out.print("Input Age: ");
-        String ageInput = scanner.nextLine().trim();
-
-        int age;
-        try {
-            age = Integer.parseInt(ageInput);
-        } catch (NumberFormatException e) {
-            System.out.println("Failed: Age must be a valid number.");
-            return;
-        }
+        String id = readNonEmptyInput("Input ID: ");
+        String name = readNonEmptyInput("Input Name: ");
+        int age = readPositiveAge("Input Age: ");
 
         Student student = new Student(id, name, age);
         boolean added = studentService.addStudent(student);
@@ -91,6 +77,41 @@ public class MainMenu {
         for (int i = 0; i < students.size(); i++) {
             Student student = students.get(i);
             System.out.println((i + 1) + ". " + student);
+        }
+    }
+
+    private String readNonEmptyInput(String prompt) {
+        while (true) {
+            System.out.print(prompt);
+            String input = scanner.nextLine().trim();
+
+            if (!input.isEmpty()) {
+                return input;
+            }
+
+            System.out.println("Input cannot be empty. Please try again.");
+        }
+    }
+
+    private int readPositiveAge(String prompt) {
+        while (true) {
+            System.out.print(prompt);
+            String ageInput = scanner.nextLine().trim();
+
+            if (ageInput.isEmpty()) {
+                System.out.println("Input cannot be empty. Please try again.");
+                continue;
+            }
+
+            try {
+                int age = Integer.parseInt(ageInput);
+                if (age > 0) {
+                    return age;
+                }
+                System.out.println("Age must be a positive number.");
+            } catch (NumberFormatException e) {
+                System.out.println("Age must be a valid number.");
+            }
         }
     }
 }
