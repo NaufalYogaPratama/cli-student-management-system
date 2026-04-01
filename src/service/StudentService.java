@@ -43,6 +43,25 @@ public class StudentService {
         return null;
     }
 
+    public List<Student> findStudentsByName(String nameKeyword) {
+        List<Student> results = new ArrayList<>();
+
+        if (nameKeyword == null || nameKeyword.trim().isEmpty()) {
+            return results;
+        }
+
+        String normalizedKeyword = nameKeyword.trim().toLowerCase();
+
+        for (Student student : students) {
+            String studentName = student.getName();
+            if (studentName != null && studentName.toLowerCase().contains(normalizedKeyword)) {
+                results.add(student);
+            }
+        }
+
+        return results;
+    }
+
     public boolean updateStudent(String id, Student newData) {
         if (newData == null) {
             return false;

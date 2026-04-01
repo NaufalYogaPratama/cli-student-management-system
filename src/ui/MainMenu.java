@@ -30,7 +30,7 @@ public class MainMenu {
                     viewStudentsMenu();
                     break;
                 case "3":
-                    searchStudentByIdMenu();
+                    searchStudentMenu();
                     break;
                 case "4":
                     updateStudentMenu();
@@ -54,7 +54,7 @@ public class MainMenu {
         System.out.println("==== Student Management Menu ====");
         System.out.println("1. Add Student");
         System.out.println("2. View All Students");
-        System.out.println("3. Search Student by ID");
+        System.out.println("3. Search Student by ID or Name");
         System.out.println("4. Update Student");
         System.out.println("5. Delete Student");
         System.out.println("6. Exit");
@@ -92,6 +92,25 @@ public class MainMenu {
         }
     }
 
+    private void searchStudentMenu() {
+        System.out.println("\n-- Search Student --");
+        System.out.println("1. Search by ID");
+        System.out.println("2. Search by Name");
+
+        String choice = readNonEmptyInput("Choose search type (1-2): ");
+
+        switch (choice) {
+            case "1":
+                searchStudentByIdMenu();
+                break;
+            case "2":
+                searchStudentByNameMenu();
+                break;
+            default:
+                System.out.println("Invalid search type. Please choose 1 or 2.");
+        }
+    }
+
     private void searchStudentByIdMenu() {
         System.out.println("\n-- Search Student by ID --");
         String id = readNonEmptyInput("Input student ID: ");
@@ -101,6 +120,22 @@ public class MainMenu {
             System.out.println("Student with ID '" + id + "' not found.");
         } else {
             System.out.println("Student found: " + student);
+        }
+    }
+
+    private void searchStudentByNameMenu() {
+        System.out.println("\n-- Search Student by Name --");
+        String keyword = readNonEmptyInput("Input name keyword: ");
+
+        List<Student> results = studentService.findStudentsByName(keyword);
+        if (results.isEmpty()) {
+            System.out.println("No students found with name containing '" + keyword + "'.");
+            return;
+        }
+
+        System.out.println("Found " + results.size() + " student(s):");
+        for (int i = 0; i < results.size(); i++) {
+            System.out.println((i + 1) + ". " + results.get(i));
         }
     }
 
