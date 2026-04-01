@@ -6,5 +6,7 @@ public class Main {
         StudentService studentService = new StudentService();
         MainMenu mainMenu = new MainMenu(studentService);
         mainMenu.start();
+        studentService.saveData();
+        System.out.println("Data saved successfully.");
     }
 }

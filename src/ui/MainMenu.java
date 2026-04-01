@@ -69,27 +69,13 @@ public class MainMenu {
 
         Student student = new Student(id, name, age);
         boolean added = studentService.addStudent(student);
-
-        if (added) {
-            System.out.println("Student added successfully.");
-        } else {
-            System.out.println("Failed to add student. ID must be unique and not empty.");
-        }
+        printResult(added, "Student added successfully.", "Failed to add student. ID must be unique and not empty.");
     }
 
     private void viewStudentsMenu() {
         System.out.println("\n-- Student List --");
         List<Student> students = studentService.getAllStudents();
-
-        if (students.isEmpty()) {
-            System.out.println("No students found.");
-            return;
-        }
-
-        for (int i = 0; i < students.size(); i++) {
-            Student student = students.get(i);
-            System.out.println((i + 1) + ". " + student);
-        }
+        printStudentList(students, "No students found.");
     }
 
     private void searchStudentMenu() {
@@ -128,15 +114,7 @@ public class MainMenu {
         String keyword = readNonEmptyInput("Input name keyword: ");
 
         List<Student> results = studentService.findStudentsByName(keyword);
-        if (results.isEmpty()) {
-            System.out.println("No students found with name containing '" + keyword + "'.");
-            return;
-        }
-
-        System.out.println("Found " + results.size() + " student(s):");
-        for (int i = 0; i < results.size(); i++) {
-            System.out.println((i + 1) + ". " + results.get(i));
-        }
+        printStudentList(results, "No students found with name containing '" + keyword + "'.");
     }
 
     private void updateStudentMenu() {
@@ -155,12 +133,7 @@ public class MainMenu {
 
         Student newData = new Student(existingStudent.getId(), newName, newAge);
         boolean updated = studentService.updateStudent(id, newData);
-
-        if (updated) {
-            System.out.println("Student updated successfully.");
-        } else {
-            System.out.println("Failed to update student.");
-        }
+        printResult(updated, "Student updated successfully.", "Failed to update student.");
     }
 
     private void deleteStudentMenu() {
@@ -174,38 +147,49 @@ public class MainMenu {
         }
 
         boolean deleted = studentService.deleteStudent(id);
-        if (deleted) {
-            System.out.println("Student deleted successfully.");
-        } else {
-            System.out.println("Failed to delete student.");
+        printResult(deleted, "Student deleted successfully.", "Failed to delete student.");
+    }
+
+    private void printStudentList(List<Student> students, String emptyMessage) {
+        if (students.isEmpty()) {
+            System.out.println(emptyMessage);
+            return;
         }
+
+        for (int i = 0; i < students.size(); i++) {
+            System.out.println((i + 1) + ". " + students.get(i));
+        }
+    }
+
+    private void printResult(boolean success, String successMessage, String failureMessage) {
+        System.out.println(success ? successMessage : failureMessage);
+    }
+
+    private String readLine(String prompt) {
+        System.out.print(prompt);
+        return scanner.nextLine().trim();
     }
 
     private String readNonEmptyInput(String prompt) {
         while (true) {
-            System.out.print(prompt);
-            String input = scanner.nextLine().trim();
-
+            String input = readLine(prompt);
             if (!input.isEmpty()) {
                 return input;
             }
-
             System.out.println("Input cannot be empty. Please try again.");
         }
     }
 
     private int readPositiveAge(String prompt) {
         while (true) {
-            System.out.print(prompt);
-            String ageInput = scanner.nextLine().trim();
-
-            if (ageInput.isEmpty()) {
+            String input = readLine(prompt);
+            if (input.isEmpty()) {
                 System.out.println("Input cannot be empty. Please try again.");
                 continue;
             }
 
             try {
-                int age = Integer.parseInt(ageInput);
+                int age = Integer.parseInt(input);
                 if (age > 0) {
                     return age;
                 }

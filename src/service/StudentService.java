@@ -7,13 +7,23 @@ import java.util.List;
 
 public class StudentService {
     private final List<Student> students;
+    private final FileStorage fileStorage;
 
     public StudentService() {
-        this.students = new ArrayList<>();
+        this.fileStorage = new FileStorage("students.txt");
+        this.students = new ArrayList<>(fileStorage.load());
+    }
+
+    public void saveData() {
+        fileStorage.save(students);
+    }
+
+    private boolean isNullOrEmpty(String value) {
+        return value == null || value.trim().isEmpty();
     }
 
     public boolean addStudent(Student student) {
-        if (student == null || student.getId() == null || student.getId().trim().isEmpty()) {
+        if (student == null || isNullOrEmpty(student.getId())) {
             return false;
         }
 
@@ -30,12 +40,13 @@ public class StudentService {
     }
 
     public Student findStudentById(String id) {
-        if (id == null || id.trim().isEmpty()) {
+        if (isNullOrEmpty(id)) {
             return null;
         }
 
+        String normalizedId = id.trim();
         for (Student student : students) {
-            if (student.getId().equalsIgnoreCase(id.trim())) {
+            if (student.getId().equalsIgnoreCase(normalizedId)) {
                 return student;
             }
         }
@@ -46,7 +57,7 @@ public class StudentService {
     public List<Student> findStudentsByName(String nameKeyword) {
         List<Student> results = new ArrayList<>();
 
-        if (nameKeyword == null || nameKeyword.trim().isEmpty()) {
+        if (isNullOrEmpty(nameKeyword)) {
             return results;
         }
 
